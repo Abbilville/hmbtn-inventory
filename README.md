@@ -75,15 +75,165 @@
     <li><b>MaterialApp</b>: Widget yang digunakan untuk mengkonfigurasi dan menampilkan aplikasi Flutter. Ini menyediakan berbagai pengaturan, termasuk tema dan halaman beranda.</li>
   </ul>
 </li>
+<br>
 <li>Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial) <br>
   <ul>
-    <li></li>
+    <li>Buat project flutter baru dan beri nama hmbtn_inventory dengan cara menjalankan kode <code>flutter create hmbtn_inventory; cd shopping_list</code> di terminal</li>
+    <li>Buat file baru dan beri nama <code>menu.dart</code> pada folder <code>hmbtn_inventory/lib</code> lalu isi dengan kode berikut:
+
+    import 'package:flutter/material.dart';
+    
+    class Item {
+      final String name;
+      final IconData icon;
+      final Color color;
+    
+      Item(this.name, this.icon, this.color);
+    }
+    
+    class MyHomePage extends StatelessWidget {
+      MyHomePage({Key? key}) : super(key: key);
+    
+      final List<Item> items = [
+        Item("Lihat Item", Icons.checklist, Colors.indigo.shade200),
+        Item("Tambah Item", Icons.add_shopping_cart, Colors.indigo),
+        Item("Logout", Icons.logout, Colors.indigo.shade900),
+      ];
+    
+      @override
+      Widget build(BuildContext context) {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.indigo,
+            title: const Text(
+              'Inventory',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          body: SingleChildScrollView(
+            // Widget wrapper yang dapat discroll
+            child: Padding(
+              padding: const EdgeInsets.all(10.0), // Set padding dari halaman
+              child: Column(
+                // Widget untuk menampilkan children secara vertikal
+                children: <Widget>[
+                  const Padding(
+                    padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                    // Widget Text untuk menampilkan tulisan dengan alignment center dan style yang sesuai
+                    child: Text(
+                      'Harvest Moon: Back to Nature Inventory', // Text yang menandakan toko
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  // Grid layout
+                  GridView.count(
+                    // Container pada card kita.
+                    primary: true,
+                    padding: const EdgeInsets.all(20),
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    crossAxisCount: 3,
+                    shrinkWrap: true,
+                    children: items.map((Item item) {
+                      // Iterasi untuk setiap item
+                      return ShopCard(item);
+                    }).toList(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      }
+    }
+    
+    class ShopCard extends StatelessWidget {
+      final Item item;
+    
+      const ShopCard(this.item, {super.key}); // Constructor
+    
+      @override
+      Widget build(BuildContext context) {
+        return Material(
+          color: item.color,
+          child: InkWell(
+            // Area responsive terhadap sentuhan
+            onTap: () {
+              // Memunculkan SnackBar ketika diklik
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(SnackBar(
+                    content: Text("Kamu telah menekan tombol ${item.name}!")));
+            },
+            child: Container(
+              // Container untuk menyimpan Icon dan Text
+              padding: const EdgeInsets.all(8),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      item.icon,
+                      color: Colors.white,
+                      size: 30.0,
+                    ),
+                    const Padding(padding: EdgeInsets.all(3)),
+                    Text(
+                      item.name,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      }
+    }
+
+</li>
+    <li>Kode tersebut sudah mengimplementasikan membuat tiga tombol sederhana dengan ikon dan teks menggunakan bantuan class tambahan yaitu Item.</li>
+    <li>Untuk menampilkan snackbar, disini menggunakan widget InkWell yang mana dia responsive terhadap sentuhan sehingga kita dapat membuat jika dia ditekan maka akan memunculkan SnackBar tergantung dari item yang ditekan.</li>
+    <li>Kemudian, ubah kode yang ada di <code>main.dart</code> menjadi:
+      
+      import 'package:flutter/material.dart';
+      import 'package:hmbtn_inventory/menu.dart';
+      
+      void main() {
+        runApp(const MyApp());
+      }
+      
+      class MyApp extends StatelessWidget {
+        const MyApp({super.key});
+      
+        @override
+        Widget build(BuildContext context) {
+          return MaterialApp(
+            title: 'Home Page',
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
+              useMaterial3: true,
+            ),
+            home: MyHomePage(),
+          );
+        }
+      }
+      
+</li>
+    <li>Maka ketika dirun flutternya akan berfungsi dengan baik</li>
   </ul>
 </li>
 </ol>
----
+
 # References
-1. [Flutter - Stateful vs Stateless Widgets](https://www.geeksforgeeks.org/flutter-stateful-vs-stateless-widgets/ "GeeksforGeeks")
-2. [Widget Catalog](https://docs.flutter.dev/ui/widgets "Flutter")
+<ol>
+  <li><a href="https://www.geeksforgeeks.org/flutter-stateful-vs-stateless-widgets/" style="text-decoration:none;">Flutter - Stateful vs Stateless Widgets</a></li>
+  <li><a href="https://docs.flutter.dev/ui/widgets" style="text-decoration:none;">Widget Catalog</a></li>
+</ol>
 </details>
 
