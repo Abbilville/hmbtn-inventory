@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hmbtn_inventory/menu.dart';
+import 'package:hmbtn_supermarket/screens/menu.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Menu',
+      title: 'Home Page',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
         useMaterial3: true,
