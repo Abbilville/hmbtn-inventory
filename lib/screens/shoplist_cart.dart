@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hmbtn_supermarket/screens/menu.dart';
 import 'package:hmbtn_supermarket/widgets/left_drawer.dart';
 import 'package:hmbtn_supermarket/screens/shoplist_form.dart';
 import 'package:hmbtn_supermarket/widgets/item_card.dart';
@@ -18,7 +19,11 @@ class Cart extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyHomePage(),
+                  ));
             },
           ),
         ],

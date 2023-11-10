@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hmbtn_supermarket/widgets/left_drawer.dart';
 import 'package:hmbtn_supermarket/widgets/item_card.dart';
+import 'package:hmbtn_supermarket/screens/menu.dart';
 
 List<Item> cart = [];
 
@@ -31,7 +32,11 @@ class _ShopFormPageState extends State<ShopFormPage> {
           IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyHomePage(),
+                  ));
             },
           ),
         ],
