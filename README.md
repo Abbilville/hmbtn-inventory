@@ -1,4 +1,4 @@
-# Harvest Moon: Back to Nature Inventory
+# Harvest Moon: Back to Nature Supermarket
 ### Need Something for your farm?
 ---
 
@@ -237,3 +237,222 @@
 </ol>
 </details>
 
+<details>
+<summary>Pertanyaan untuk Tugas 8</summary>
+<ol>
+  <li>Jelaskan perbedaan antara <code>Navigator.push()</code> dan <code>Navigator.pushReplacement()</code>, disertai dengan contoh mengenai penggunaan kedua metode tersebut yang tepat!</li>
+  <ul>
+    <li><code>Navigator.push()</code> digunakan jika kita ingin ganti halaman dan jika back maka akan kembali ke halaman sebelumnya, biasanya dipakai ketika sedang di home dan ingin pergi ke halaman lihat keranjang, maka kita bisa kembali ke home lagi jika menekan back.</li>
+    <li><code>Navigator.pushReplacement()</code> digunakan jika kita ingin ganti halaman baru dan tidak bisa kembali ke halaman sebelumnya, biasanya dipakai di bagian login, maka jika sudah selesai login kita pushReplacement ke home sehingga tidak bisa back lagi ke halaman login.</li>
+    <li>Berikut contoh gambar penggunaan <code>Navigator.push()</code> dan <code>Navigator.pushReplacement()</code> yang saya ambil dari web technicalfeeder.</li>
+    <img src="https://www.technicalfeeder.com/images/page-transition-stack2.drawio.png?ezimgfmt=ng:webp/ngcb1"> <br>
+  </ul>
+  
+  <li>Jelaskan masing-masing layout widget pada Flutter dan konteks penggunaannya masing-masing!</li>
+    <ul>
+      <li><b>Single-child Layout Widgets</b></li>
+          Widget yang hanya dapat memiliki satu anak (child). Widget ini digunakan ketika hanya perlu menempatkan satu widget dalam satu tempat. Widget ini terdiri atas: Align, AspectRatio, Baseline, Center, ConstrainedBox, Container, CustomSingleChildLayout, Expanded, FittedBox, FractionallySizedBox, IntrinsicHeight, IntrinsicWidth, LimitedBox, Offstage, OverflowBox, Padding, SizedBox, SizedOverflowBox, dan Transform. Widget yang sering digunakan adalah Container yaitu sebagai wadah suatu widget lainnya.
+      <li><b>Multi-child Layout Widgets</b></li>
+          Widget yang dapat memiliki lebih dari satu anak (children). Widget ini digunakan ketika perlu menempatkan banyak widget dalam satu tempat. Widget ini terdiri atas: Column, CustomMultiChildLayout, Flow, GridView, IndexedStack, LayouyBuilder, ListBody, ListView, Row, Stack, Table, dan Wrap. Widget yang paling sering digunakan adalah Row yaitu untuk menaruh widget secara horizontal dan Column untuk menaruh widget secara vertikal.
+      <li><b>Sliver Widgets</b></li>
+          Widget yang digunakan untuk scrollable area, digunakan jika ingin membuat widget lain dapat di-scroll agar menciptakan fitur yang dinamis. Widget ini terdiri atas: CupertinoSliverNavigationBar, CustomScrollView, SliverAppBar, SliverChildBuilderDelegate, SliverChildListDelegate, SliverFixedExtentList, SliverGrid, SliverList, SliverPadding, SliverPersistentHeader, dan SliverToBoxAdapter.
+    </ul>
+  <li>Sebutkan apa saja elemen input pada form yang kamu pakai pada tugas kali ini dan jelaskan mengapa kamu menggunakan elemen input tersebut!</li>
+      Elemen input yang digunakan untuk tugas kali ini hanyalah <code>TextFormField</code>. Penggunaan TextFormField dapat memastikan bahwa pengguna dapat memasukkan data dengan mudah dan dapat memvalidasi atau memastikan bahwa data yang dimasukkan sesuai dengan format yang diharapkan. Selain itu, Widget ini juga digunakan agar terintegrasi dengan widget parentnya yaitu <code>Form</code>.
+  <li>Bagaimana penerapan clean architecture pada aplikasi Flutter?</li>
+      Tugas ini menggunakan prinsip <i>clean architecture</i> pada pengembangan Flutter dengan mengelompokkan file berdasarkan fungsionalitasnya masing-masing. Sebagai contoh, folder "screens" berisi file yang mendefinisikan tampilan layar dan folder "widgets" berisi file yang mengimplementasikan widget yang dapat digunakan di berbagai layar. Pengelompokan ini merupakan bentuk dari <i>refactoring file</i> dalam konteks <i>clean architecture</i>.
+  <li>Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step! (bukan hanya sekadar mengikuti tutorial)</li>
+    <ul>
+      <li>Membuat satu halaman baru pada aplikasi, yaitu halaman formulir tambah item baru dan memakai empat elemen input, yaitu name, price, amount, dan description. Kemudian form tersebut harus memiliki tombol save serta inputnya harus divalidasi sesuai dengan tipe datanya serta input tidak boleh kosong. <br>
+        di dalam <code>screens/shoplist_form.dart</code>:
+        
+        import 'package:flutter/material.dart';
+        import 'package:hmbtn_supermarket/widgets/left_drawer.dart';
+        import 'package:hmbtn_supermarket/widgets/item_card.dart';
+        import 'package:hmbtn_supermarket/screens/menu.dart';
+        
+        List<Item> cart = [];
+        
+        class ShopFormPage extends StatefulWidget {
+          const ShopFormPage({super.key});
+        
+          @override
+          State<ShopFormPage> createState() => _ShopFormPageState();
+        }
+        
+        class _ShopFormPageState extends State<ShopFormPage> {
+          final _formKey = GlobalKey<FormState>();
+          String _name = "";
+          int _price = 0;
+          int _amount = 0;
+          String _description = "";
+        
+          @override
+          Widget build(BuildContext context) {
+            return Scaffold(
+              ...
+              child: TextFormField(
+                decoration: InputDecoration(
+                  hintText: "Nama Item",
+                  labelText: "Nama Item",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                ),
+                onChanged: (String? value) {
+                  setState(() {
+                    _name = value!;
+                  });
+                },
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return "Nama tidak boleh kosong!";
+                  }
+                  return null;
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                decoration: InputDecoration(
+                  hintText: "Harga",
+                  labelText: "Harga",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                ),
+                onChanged: (String? value) {
+                  setState(() {
+                    _price = int.parse(value!);
+                  });
+                },
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return "Harga tidak boleh kosong!";
+                  }
+                  if (int.tryParse(value) == null) {
+                    return "Harga harus berupa angka!";
+                  }
+                  return null;
+                },
+              ),
+            ),
+            ... (input yang lainnya)
+
+            (save button)
+            Align(
+              ...
+                  actions: [
+                    TextButton(
+                      child: const Text('OK'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+            _formKey.currentState!.reset();
+          }
+        },
+        child: const Text(
+          "Save",
+          style: TextStyle(color: Colors.white),
+            ...
+</li>
+      <li>Mengarahkan pengguna ke halaman form tambah item baru ketika menekan tombol Tambah Item pada halaman utama. Ini dapat dilakukan dengan mengubah kode pada file <code>shop_card.dart</code> seperti ini:
+
+      import 'package:hmbtn_supermarket/screens/shoplist_form.dart';
+
+      ...
+      // Navigate ke route yang sesuai (tergantung jenis tombol)
+          if (item.name == "Tambah Item") {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ShopFormPage(),
+                ));
+          }
+        
+</li>
+      <li>Memunculkan data sesuai isi dari formulir yang diisi dalam sebuah pop-up setelah menekan tombol Save pada halaman formulir tambah item baru. Hal ini dapat dilakukan dengan menambahkan code di save button ketika tombol tersebut ditekan maka akan menampilan widget AlertDialog yang akan memunculkan data dari input yang sudah di isi seperti ini:
+
+      ...
+      if (_formKey.currentState!.validate()) {
+        cart.add(Item(_name, _price, _amount, _description));
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Item berhasil tersimpan'),
+              content: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Nama: $_name'),
+                    Text('Harga: $_price'),
+                    Text('Jumlah: $_amount'),
+                    Text('Deskripsi: $_description'),
+                  ],
+                ),
+              ),
+        ...
+</li>
+      <li>Membuat drawer yang memiliki tombol untuk mengarahkan ke halaman utama dan menambahkan item. Membuat file dengan nama <code>left_drawer.dart</code> dan taruh di folder widgets sebab drawer dapat digunakan berkali-kali. <br>
+      di dalam <code>widgets/left_drawer.dart</code>
+      import 'package:flutter/material.dart';
+      import 'package:hmbtn_supermarket/screens/menu.dart';
+      import 'package:hmbtn_supermarket/screens/shoplist_form.dart';
+      import 'package:hmbtn_supermarket/screens/shoplist_cart.dart';
+      
+      class LeftDrawer extends StatelessWidget {
+        const LeftDrawer({super.key});
+      
+        @override
+        Widget build(BuildContext context) {
+          return Drawer(
+              ...
+              ListTile(
+                leading: const Icon(Icons.home_outlined),
+                title: const Text('Halaman Utama'),
+                // Bagian redirection ke MyHomePage
+                onTap: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyHomePage(),
+                      ));
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.add_shopping_cart),
+                title: const Text('Tambah Item'),
+                // Bagian redirection ke ShopFormPage
+                onTap: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ShopFormPage(),
+                      ));
+                },
+              ...
+</li>
+        <br>Cara mengimplementasikannya hanya dengan menambahkan drawer: const LeftDrawer(); seperti ini:
+        
+        import 'package:hmbtn_supermarket/widgets/left_drawer.dart';
+        ...
+        Widget build(BuildContext context) {
+          return Scaffold(
+            appBar: AppBar(
+              ...
+            drawer: const LeftDrawer(),
+</ol>
+
+# References
+<ol>
+  <li><a href="https://www.technicalfeeder.com/2021/11/flutter-page-transition/">Flutter Page Transition</a></li>
+  <li><a href="https://docs.flutter.dev/ui/widgets/layout">Layout Widgets</a></li>
+</ol>
+</details>
