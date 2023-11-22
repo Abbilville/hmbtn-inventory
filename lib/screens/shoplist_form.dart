@@ -1,7 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:hmbtn_supermarket/widgets/left_drawer.dart';
 import 'package:hmbtn_supermarket/widgets/item_card.dart';
 import 'package:hmbtn_supermarket/screens/menu.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
 List<Item> cart = [];
 
@@ -18,9 +24,12 @@ class _ShopFormPageState extends State<ShopFormPage> {
   int _price = 0;
   int _amount = 0;
   String _description = "";
+  String _category = "";
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Center(
@@ -147,6 +156,29 @@ class _ShopFormPageState extends State<ShopFormPage> {
                 },
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                decoration: InputDecoration(
+                  hintText: "Category",
+                  labelText: "Category",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                ),
+                onChanged: (String? value) {
+                  setState(() {
+                    _category = value!;
+                  });
+                },
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return "Category tidak boleh kosong!";
+                  }
+                  return null;
+                },
+              ),
+            ),
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
@@ -155,37 +187,35 @@ class _ShopFormPageState extends State<ShopFormPage> {
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.indigo),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
+                    cart.add(Item(_name, _price, _amount, _description, _category));
                     if (_formKey.currentState!.validate()) {
-                      cart.add(Item(_name, _price, _amount, _description));
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: const Text('Item berhasil tersimpan'),
-                            content: SingleChildScrollView(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Nama: $_name'),
-                                  Text('Harga: $_price'),
-                                  Text('Jumlah: $_amount'),
-                                  Text('Deskripsi: $_description'),
-                                ],
-                              ),
-                            ),
-                            actions: [
-                              TextButton(
-                                child: const Text('OK'),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                      _formKey.currentState!.reset();
+                      // Kirim ke Django dan tunggu respons
+                      final response = await request.postJson(
+                          "https://abbilhaidar-farras-tugas.pbp.cs.ui.ac.id/create-flutter/",
+                          jsonEncode(<String, String>{
+                            'name': _name,
+                            'price': _price.toString(),
+                            'amount': _amount.toString(),
+                            'description': _description,
+                            'category': _category,
+                          }));
+                      if (response['status'] == 'success') {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: Text("Produk baru berhasil disimpan!"),
+                        ));
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => MyHomePage()),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content:
+                              Text("Terdapat kesalahan, silakan coba lagi."),
+                        ));
+                      }
                     }
                   },
                   child: const Text(

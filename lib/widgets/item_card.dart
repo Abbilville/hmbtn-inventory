@@ -5,8 +5,9 @@ class Item {
   int price;
   int amount;
   String description;
+  String category;
 
-  Item(this.name, this.price, this.amount, this.description);
+  Item(this.name, this.price, this.amount, this.description, this.category);
 }
 
 class ItemCard extends StatelessWidget {
@@ -31,6 +32,7 @@ class ItemCard extends StatelessWidget {
                     Text('Harga: ${item.price}'),
                     Text('Jumlah: ${item.amount}'),
                     Text('Deskripsi: ${item.description}'),
+                    Text('Kategori: ${item.category}'),
                   ],
                 ),
               ),
@@ -98,6 +100,10 @@ class ItemCard extends StatelessWidget {
                   ),
                   Text(
                     'Deskripsi: ${item.description}',
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    'Kategory: ${item.category}',
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],

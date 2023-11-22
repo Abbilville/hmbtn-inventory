@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hmbtn_supermarket/screens/menu.dart';
+import 'package:hmbtn_supermarket/screens/login.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,13 +13,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Home Page',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
-        useMaterial3: true,
-      ),
-      home: MyHomePage(),
-    );
+    return Provider(
+        create: (_) {
+          CookieRequest request = CookieRequest();
+          return request;
+        },
+        child: MaterialApp(
+          title: 'Home Page',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
+            useMaterial3: true,
+          ),
+          home: const LoginPage(),
+        ));
   }
 }
